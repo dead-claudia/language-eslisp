@@ -1,0 +1,17 @@
+{
+  "no_unnecessary_double_quotes": {
+    "level": "error"
+  },
+  "max_line_length": {
+    "value": 100
+  },
+  "line_endings": {
+    "level": "warn"
+  },
+  "no_debugger": {
+    "level": "error"
+  },
+  "eol_last": {
+    "level": "warn"
+  }
+}

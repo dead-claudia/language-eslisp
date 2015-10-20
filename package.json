@@ -1,0 +1,20 @@
+{
+  "name": "language-eslisp",
+  "version": "0.0.0",
+  "description": "Eslisp language support in Atom",
+  "keywords": [
+    "language",
+    "grammar"
+  ],
+  "repository": "https://github.com/impinball/language-eslisp",
+  "license": "ISC",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "scripts": {
+    "test": "coffeelint ."
+  },
+  "devDependencies": {
+    "coffeelint": "^1.13.0"
+  }
+}

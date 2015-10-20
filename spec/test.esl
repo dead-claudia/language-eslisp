@@ -1,0 +1,186 @@
+;;;
+;;; This file is used to test the syntax.
+;;;
+
+; comment
+;; big comment
+;;; bigger comment
+;comment
+;;big comment
+;;;bigger comment
+
+"string"
+"string with spaces"
+"string with escapes \\ \" \b \f \n \r \t \v \0"
+"string with invalid escapes \a \c \' \  \* \`"
+"string with (parentheses)"
+
+42
+42.1
+42.333333
+
+variable
+camelCasedVariable
+PascalCasedVariable
+variable-with-dashes
+VariableWith1InnerNumber
+VariableWIthEndNumber1
+
+(func)
+(func a)
+(func a b)
+
+((func) a)
+
+(+ a b)
+(- a b)
+(* a b)
+(/ a b)
+(% a b)
+(& a b)
+(| a b)
+(^ a b)
+(= a b)
+(< a b)
+(<= a b)
+(> a b)
+(>= a b)
+(== a b)
+(!= a b)
+(=== a b)
+(!== a b)
+(&& a b)
+(|| a b)
+(<< a b)
+(>> a b)
+(>>> a b)
+
+(! a)
+(~ a)
+(++ a)
+(-- a)
+(++_ a)
+(--_ a)
+(_++ a)
+(_-- a)
+
+(+= a b)
+(-= a b)
+(*= a b)
+(/= a b)
+(%= a b)
+(&= a b)
+(|= a b)
+(^= a b)
+(<<= a b)
+(>>= a b)
+(>>>= a b)
+
+(. obj prop)
+(get obj prop)
+
+(delete a)
+(typeof a)
+(void a)
+(instanceof a)
+(in a b)
+
+(lambda () (body))
+(lambda (a) (body))
+(lambda (a b) (body))
+(lambda name () (body))
+(lambda name (a) (body))
+(lambda name (a b) (body))
+
+(function name () (body))
+(function name (a) (body))
+(function name (a b) (body))
+
+(array a b c)
+(object (a b) (c d))
+(regex \bfoo\b)
+(var (a 1) (b 2))
+
+(switch (obj)
+     (1 (foo))
+     (default bar))
+
+(if (condition)
+     (ifTrue)
+     (ifFalse))
+
+(if (condition)
+     (block ifTrue)
+     (block ifFalse))
+
+(?: (condition)
+     (ifTrue)
+     (ifFalse))
+
+(while (cond)
+     (body))
+
+(while (cond)
+     (block body))
+
+(dowhile (cond)
+     (body))
+
+(dowhile (cond)
+     (block body))
+
+(for (var (i 0)) (< i length) (++ i)
+     (body))
+
+(for (var (i 0)) (< i length) (++ i)
+     (block body))
+
+(forin (var i) (obj)
+     (body))
+
+(forin (var i) (obj)
+     (block body))
+
+;; This will fail, but getting the highlighter to see that this is invalid is hard.
+(break)
+(break label)
+
+(continue)
+(continue label)
+
+(label label)
+
+(return)
+(return value)
+
+(new C value)
+
+(debugger)
+
+(throw)
+(throw error)
+
+(try
+     (body)
+     (catch (e)
+          (body)))
+
+(block)
+(block (body))
+
+(quote)
+(quasiquote)
+(unquote)
+(unquote-splicing)
+
+`(. ,atoms)
+`(. @atoms)
+`(. ,@atoms)
+
+(seq a b c)
+
+(macro foo
+     (lambda () `(doSomething)))
+
+(capmacro foo
+     (lambda () `(doSomething)))

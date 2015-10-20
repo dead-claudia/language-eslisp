@@ -1,0 +1,151 @@
+# The Eslisp Atom grammar
+
+scopeName: 'source.eslisp'
+name: 'Eslisp'
+fileTypes: ['esl']
+foldingStartMarker: '\\(\\s*$'
+foldingStopMarker: '^\\s*\\)'
+
+patterns: [
+  include: '#comment'
+,
+  include: '#literal'
+  # TODO: Watch https://github.com/anko/eslisp/issues/23
+# ,
+#   include: '#keywords'
+,
+  include: '#sexp'
+,
+  include: '#string'
+,
+  include: '#quoted'
+,
+  include: '#reader'
+]
+
+repository:
+  comment:
+    name: 'comment.line.semicolon.eslisp'
+    match: '(?-m)(;).*$'
+    captures:
+      1: name: 'punctuation.definition.comment.eslisp'
+
+  # Language constants and literals
+  literal:
+    patterns: [
+      name: 'constant.language.null.eslisp'
+      match: '(null)'
+    ,
+      name: 'support.constant.language.undefined.eslisp'
+      match: '(undefined)'
+    ,
+      name: 'constant.language.boolean.eslisp'
+      match: '(true|false)'
+    ,
+      include: '#identifier'
+    ,
+      name: 'constant.numeric.eslisp'
+      match: '(?:[^\\w\\D\\-])(-?\\d+(\\.\\d+)?)(?:[^\\w\\D\\-])'
+    ]
+
+  quoted:
+    # Match syntax quoted expressions
+    begin: '(`)'
+    beginCaptures:
+      1:
+        name: 'support.other.eslisp'
+    patterns: [include: '$self']
+
+  reader:
+    # Match basic reader macros for unquoting/splicing
+    match: '(,@|,|@)'
+    name: 'support.other.eslisp'
+
+  string:
+    name: 'string.quoted.double.eslisp'
+
+    begin: '(?<!\\\\)(")'
+    beginCaptures:
+      1: name: 'punctuation.definition.string.begin.eslisp'
+
+    end: '(")'
+    endCaptures:
+      1: name: 'punctuation.definition.string.end.eslisp'
+
+    patterns: [
+      match: '\\\\[bfnrtv0\\\\"]'
+      name: 'constant.character.escape.eslisp'
+    ,
+      match: '\\\\.'
+      name: 'invalid.illegal.string.eslisp'
+    ]
+
+  # Keywords
+  # TODO: Watch https://github.com/anko/eslisp/issues/23
+  keyword:
+    # This accepts dashes in the middle for `eslisp-camelify` users.
+    match: "(?<=\\s|\\()('[a-zA-Z_$][\\w$\\-]*[\\w$]?)"
+    captures: 1: name: 'constant.keyword.eslisp'
+
+  # Match generic s-expressions
+  sexp:
+    begin: '(\\(\\s*)'
+    beginCaptures:
+      1: name: 'punctuation.section.expression.begin.eslisp'
+    end: '(\\))(\\n)?'
+    endCaptures:
+      1: name: 'punctuation.section.expression.end.eslisp'
+      2: name: 'meta.after-expression.eslisp'
+    name: 'meta.expression.eslisp'
+
+    patterns: [
+      # Macros
+      # This accepts dashes in the middle for `eslisp-camelify` users.
+      match: '(?<=\\()((cap)?macro)\\s+([a-zA-Z_$][\\w$\\-]*[\\w$]?)(?=\\s|\\))'
+      captures:
+        1: name: 'keyword.control.eslisp'
+        3: name: 'entity.name.function.eslisp'
+      patterns: [include: '$self']
+    ,
+      # Match functions and lambdas, like:
+      # (function name (args) body)
+      # (lambda (args) body)
+      # (lambda name (args) body)
+      name: 'meta.definition.global.eslisp'
+
+      # This accepts dashes in the middle for `eslisp-camelify` users.
+      # coffeelint: disable=max_line_length
+      begin: '(?<=\\()(function|lambda)\\(\\s*(([a-zA-Z_$][\\w$\\-]*[\\w$]?)(\\s+([a-zA-Z_$][\\w$\\-]*[\\w$]?))*)\\s*\\)'
+      # coffeelint: enable=max_line_length
+      beginCaptures: 1: name: 'keyword.control.function.eslisp'
+      end: '(?=\\s|\\))'
+      patterns: [include: '$self']
+    ,
+      # Literal types
+      match: '(?<=\\()(regex)(?=\\s|\\))'
+      captures: 1: name: 'storage.function.eslisp'
+      # TODO(impinball): this should really be a string IMHO.
+      patterns: [include: 'source.js.regexp']
+    ,
+      match: '(?<=\\()(array|object)(?=\\s|\\))'
+      captures: 1: name: 'storage.function.eslisp'
+      patterns: [include: '$self']
+    ,
+      # Match macro helpers and `require`
+      match: '(?<=\\()(quote|quasiquote|unquote|unquote-splicing|require)(?=\\s|\\))'
+      captures: 1: name: 'support.function.eslisp'
+      patterns: [include: '$self']
+    ,
+      # Match basic control statements, like (forin (var key) obj (doSomething))
+      # coffeelint: disable=max_line_length
+      match: '(?<=\\()(\\?:|block|break|catch|continue|debugger|dowhile|forin|for|if|label|new|return|seq|switch|throw|try|var|while)'
+      # coffeelint: enable=max_line_length
+      captures: 1: name: 'keyword.control.eslisp'
+      patterns: [include: '$self']
+    ,
+      match: '(?<=\\()([^\\(\\)\\s]+)(?=\\s|\\))'
+      captures: 1: name: 'entity.name.function.clojure'
+      patterns: [include: '$self']
+    ,
+      include: '$self'
+    ]
